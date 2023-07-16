@@ -114,7 +114,7 @@
 
                 </script>
             </div>
-            @include('components.scanner-settings')
+            @include('components.ch_scanner-settings')
         </div>
     </div>
 </x-app-layout>
