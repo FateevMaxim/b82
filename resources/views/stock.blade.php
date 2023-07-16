@@ -19,7 +19,7 @@
                         <h3>China</h3>
                     </div>
                     <div class="absolute p-4 bottom-0">
-                        <span>Количество зарегистрированных трек кодов за сегодня</span>
+                        <span>今日已上传</span>
                         <h3>{{ $count }}</h3>
                     </div>
 
@@ -33,10 +33,10 @@
                 <div class="grid grid-cols-1 p-4 min_height round_border relative">
                     <div class="grid mx-auto">
                         <div id="qrcode"></div>
-                        <b class="mx-auto" style="margin-top: -45px;">Upload Data</b>
+                        <b class="mx-auto" style="margin-top: -45px;">上传数据</b>
                     </div>
                     <div id="track">
-                        <span>Счётчик</span>
+                        <span>扫描数量</span>
 
                         <div x-data="{ count: 0 }">
                             <h1 id="count"></h1>
@@ -49,10 +49,10 @@
                                     @csrf
 
                                     <x-primary-button class="mx-auto w-full">
-                                        {{ __('Загрузить') }}
+                                        {{ __('保存数据') }}
                                     </x-primary-button>
                                     <x-secondary-button class="mx-auto mt-4 w-full" id="clear">
-                                        {{ __('Очистить') }}
+                                        {{ __('清楚数据') }}
                                     </x-secondary-button>
                                 </div>
                             </div>
