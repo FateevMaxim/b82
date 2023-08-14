@@ -7,10 +7,12 @@ use App\Models\ClientTrackList;
 use App\Models\Configuration;
 use App\Models\Message;
 use App\Models\QrCodes;
+use App\Models\RandomTrack;
 use App\Models\TrackList;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class DashboardController extends Controller
 {
@@ -38,7 +40,17 @@ class DashboardController extends Controller
         }elseif (Auth::user()->is_active === 1 && Auth::user()->type === 'stock'){
             $config = Configuration::query()->select('address', 'title_text', 'address_two')->first();
             $count = TrackList::query()->whereDate('created_at', Carbon::today())->count();
-            return view('stock', ['count' => $count, 'config' => $config, 'qr' => $qrChina]);
+            $randomString = RandomTrack::query()->select('track_code')->where('status', false)->first();
+            if(!$randomString){
+                $randomString = strtoupper(Str::random(9));
+                $randomTrack = new RandomTrack();
+                $randomTrack->track_code = $randomString;
+                $randomTrack->save();
+            }else{
+                $randomString = $randomString->track_code;
+            }
+
+            return view('stock', ['count' => $count, 'config' => $config, 'qr' => $qrChina, 'randomString' => $randomString]);
         }elseif (Auth::user()->is_active === 1 && Auth::user()->type === 'almatyin'){
             $config = Configuration::query()->select('address', 'title_text', 'address_two')->first();
             $count = TrackList::query()->whereDate('to_almaty', Carbon::today())->count();

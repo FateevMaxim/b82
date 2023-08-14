@@ -5,12 +5,30 @@
 <x-app-layout>
         <div class="py-6">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                @if(session()->has('message'))
+                    <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+                        <span class="font-medium">{{ session()->get('message') }}
+                    </div>
+                @endif
 
                 <div class="grid grid-cols-1 mx-auto md:grid-cols-3 h-22 pl-6 pr-6 pb-4">
 
                         <div class="min_height round_border p-4 relative">
                             <div>
                                 <h3 class="mt-0 p-4 text-2xl font-medium leading-tight text-primary">Пункт приёма Алматы</h3>
+                            </div>
+                            <div>
+                                <form method="POST" action="{{ route('almatyallin-product') }}" id="almatyAllIn">
+                                    <div class="w-full">
+                                        @csrf
+                                        <x-input-label for="place_number" :value="__('Номер места')" />
+
+                                        <x-text-input id="place_number" class="block mt-1 w-full border-2 border-sky-400" type="text" name="place_number" autofocus />
+                                        <x-primary-button class="mx-auto mt-4 w-full">
+                                            {{ __('Принять товары') }}
+                                        </x-primary-button>
+                                    </div>
+                                </form>
                             </div>
                             <div class="absolute p-4 bottom-0">
                                 <span>Количество зарегистрированных трек кодов за сегодня</span>
@@ -83,6 +101,24 @@
                                     }
                                     code += e.code[3];
                                 }
+                            });
+
+                            /* прикрепить событие submit к форме */
+                            $("#almatyAllIn").submit(function(event) {
+                                /* отключение стандартной отправки формы */
+                                event.preventDefault();
+
+
+                                /* собираем данные с элементов страницы: */
+                                var $form = $( this ),
+                                    place_number = $("#place_number").val();
+                                    url = $form.attr( 'action' );
+                                /* отправляем данные методом POST */
+                                $.post( url, { place_number: place_number } )
+                                 .done(function( data ) {
+                                     location.reload();
+                                 });
+
                             });
 
                             /* прикрепить событие submit к форме */

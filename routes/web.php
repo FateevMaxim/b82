@@ -39,7 +39,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/file-export', [ProductController::class, 'fileExport'])->name('file-export');
     Route::get('/archive', [DashboardController::class, 'archive'])->name('archive');
     Route::post('/china-product', [ProductController::class, 'addChina'])->name('china-product');
+    Route::post('/close-place', [ProductController::class, 'closePlace'])->name('close-place');
     Route::post('/almatyin-product', [ProductController::class, 'almatyIn'])->name('almatyin-product');
+    Route::post('/almatyallin-product', [ProductController::class, 'almatyAllIn'])->name('almatyallin-product');
     Route::post('/almatyout-product', [ProductController::class, 'almatyOut'])->name('almatyout-product');
     Route::post('/getinfo-product', [ProductController::class, 'getInfoProduct'])->name('getinfo-product');
     Route::post('/client-product', [ProductController::class, 'addClient'])->name('client-product');

@@ -6,6 +6,7 @@ use App\Exports\UsersExport;
 use App\Imports\TracksImport;
 use App\Models\ClientTrackList;
 use App\Models\Configuration;
+use App\Models\RandomTrack;
 use App\Models\TrackList;
 use App\Models\User;
 use Carbon\Carbon;
@@ -19,7 +20,6 @@ class ProductController extends Controller
 {
     public function addChina(Request $request)
     {
-
         $array =  preg_split("/\s+/", $request["track_codes"]);
         $wordsFromFile = [];
         foreach ($array as $ar){
@@ -29,11 +29,21 @@ class ProductController extends Controller
                 'status' => 'Получено в Китае',
                 'reg_china' => 1,
                 'created_at' => date(now()),
+                'place' => $request["place"],
             ];
         }
         TrackList::insertOrIgnore($wordsFromFile);
         return response('success');
 
+    }
+
+    public function closePlace(Request $request)
+    {
+        $randomTrack = RandomTrack::query()->where('track_code', $request["place"])->first();
+        $randomTrack->status = true;
+        $randomTrack->save();
+        session()->flash('message', 'Место закрыто');
+        return response('success');
     }
 
     public function almatyIn(Request $request)
@@ -53,6 +63,14 @@ class ProductController extends Controller
         TrackList::upsert($wordsFromFile, ['track_code', 'to_almaty', 'status', 'reg_almaty', 'updated_at']);
         return redirect()->back()->with('message', 'Трек код успешно добавлен');
 
+    }
+
+    public function almatyAllIn(Request $request)
+    {
+        TrackList::where('place', $request['place_number'])->update(['status' => 'Получено на складе в Алматы',
+            'to_almaty' => date(now()), ]);
+        session()->flash('message', 'Место успешно добавлено');
+        return response('success');
     }
 
     public  function acceptProduct (Request $request)

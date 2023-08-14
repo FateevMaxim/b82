@@ -18,6 +18,20 @@
                                 </span>
                         <h3>China</h3>
                     </div>
+                    <div>
+                        <span>ID Места - </span><span id="place">{{ $randomString }}</span><br />
+                        <form method="POST" action="{{ route('close-place') }}" id="closePlace">
+                            <div>
+                                <div>
+                                    @csrf
+                                    <hr />
+                                    <x-primary-button class="mx-auto w-full">
+                                        {{ __('Закрыть место') }}
+                                    </x-primary-button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                     <div class="absolute p-4 bottom-0">
                         <span>今日已上传</span>
                         <h3>{{ $count }}</h3>
@@ -36,6 +50,7 @@
                         <b class="mx-auto" style="margin-top: -45px;">上传数据</b>
                     </div>
                     <div id="track">
+
                         <span>扫描数量</span>
 
                         <div x-data="{ count: 0 }">
@@ -90,10 +105,27 @@
                         /* собираем данные с элементов страницы: */
                         var $form = $( this ),
                             track_codes = $("#clear_track_codes").html();
+                        var place = $("#place").html();
                         url = $form.attr( 'action' );
 
                         /* отправляем данные методом POST */
-                        $.post( url, { track_codes: track_codes } )
+                        $.post( url, { track_codes: track_codes, place: place } )
+                            .done(function( data ) {
+                                location.reload();
+                            });
+
+                    });
+/* прикрепить событие submit к форме */
+                    $("#closePlace").submit(function(event) {
+                        /* отключение стандартной отправки формы */
+                        event.preventDefault();
+
+                        /* собираем данные с элементов страницы: */
+                        var $form = $( this ), place = $("#place").html();
+                        url = $form.attr( 'action' );
+
+                        /* отправляем данные методом POST */
+                        $.post( url, { place: place } )
                             .done(function( data ) {
                                 location.reload();
                             });
